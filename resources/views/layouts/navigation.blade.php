@@ -15,6 +15,44 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    
+                    @if(auth()->user()->role->role_name === 'Admin' || auth()->user()->role->role_name === 'Manager')
+                        <x-nav-link :href="route('members.index')" :active="request()->routeIs('members.*')">
+                            {{ __('Members') }}
+                        </x-nav-link>
+                        
+                        <x-nav-link :href="route('staff.index')" :active="request()->routeIs('staff.*')">
+                            {{ __('Staff') }}
+                        </x-nav-link>
+                        
+                        <x-nav-link :href="route('classes.index')" :active="request()->routeIs('classes.*')">
+                            {{ __('Classes') }}
+                        </x-nav-link>
+                        
+                        <x-nav-link :href="route('payments.index')" :active="request()->routeIs('payments.*')">
+                            {{ __('Payments') }}
+                        </x-nav-link>
+                        
+                        <x-nav-link :href="route('memberships.index')" :active="request()->routeIs('memberships.*')">
+                            {{ __('Memberships') }}
+                        </x-nav-link>
+                    @endif
+                    
+                    @if(auth()->user()->role->role_name === 'Trainer')
+                        <x-nav-link :href="route('classes.index')" :active="request()->routeIs('classes.*')">
+                            {{ __('My Classes') }}
+                        </x-nav-link>
+                    @endif
+                    
+                    @if(auth()->user()->role->role_name === 'Member')
+                        <x-nav-link :href="#" :active="request()->routeIs('bookings.*')">
+                            {{ __('My Bookings') }}
+                        </x-nav-link>
+                        
+                        <x-nav-link :href="#" :active="request()->routeIs('payments.*')">
+                            {{ __('My Payments') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -23,7 +61,7 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
+                            <div>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
 
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -70,12 +108,50 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            
+            @if(auth()->user()->role->role_name === 'Admin' || auth()->user()->role->role_name === 'Manager')
+                <x-responsive-nav-link :href="route('members.index')" :active="request()->routeIs('members.*')">
+                    {{ __('Members') }}
+                </x-responsive-nav-link>
+                
+                <x-responsive-nav-link :href="route('staff.index')" :active="request()->routeIs('staff.*')">
+                    {{ __('Staff') }}
+                </x-responsive-nav-link>
+                
+                <x-responsive-nav-link :href="route('classes.index')" :active="request()->routeIs('classes.*')">
+                    {{ __('Classes') }}
+                </x-responsive-nav-link>
+                
+                <x-responsive-nav-link :href="route('payments.index')" :active="request()->routeIs('payments.*')">
+                    {{ __('Payments') }}
+                </x-responsive-nav-link>
+                
+                <x-responsive-nav-link :href="route('memberships.index')" :active="request()->routeIs('memberships.*')">
+                    {{ __('Memberships') }}
+                </x-responsive-nav-link>
+            @endif
+            
+            @if(auth()->user()->role->role_name === 'Trainer')
+                <x-responsive-nav-link :href="route('classes.index')" :active="request()->routeIs('classes.*')">
+                    {{ __('My Classes') }}
+                </x-responsive-nav-link>
+            @endif
+            
+            @if(auth()->user()->role->role_name === 'Member')
+                <x-responsive-nav-link :href="#" :active="request()->routeIs('bookings.*')">
+                    {{ __('My Bookings') }}
+                </x-responsive-nav-link>
+                
+                <x-responsive-nav-link :href="#" :active="request()->routeIs('payments.*')">
+                    {{ __('My Payments') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4">
-                <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
+                <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
             </div>
 

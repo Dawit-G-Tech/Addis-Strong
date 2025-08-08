@@ -1,8 +1,4 @@
 /*
-								  SQL Project: Gym Management System (GMS)
-											  Name: Abdullah
-										   Trainee ID: 1271691
-										Batch ID: ESAD-CS/PNTL-M/53/01
 
  ----------------------------------------------------------------------------------------------------
 
