@@ -40,14 +40,13 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role_id' => Role::where('role_name', 'user')->first()->role_id,
+            'role_id' => Role::where('role_name', 'user')->first()->role_id ?? 1,
         ]);
         
-
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('.dashboards.member', absolute: false));
+        return redirect()->route('user.dashboard');
     }
 }

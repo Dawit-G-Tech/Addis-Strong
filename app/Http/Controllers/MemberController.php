@@ -8,6 +8,7 @@ use App\Models\Membership;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use App\Models\Role;
 
 class MemberController extends Controller
 {
@@ -37,10 +38,10 @@ class MemberController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:100',
             'last_name' => 'required|string|max:100',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'nullable|string|max:20',
-            'gender' => 'nullable|in:Male,Female,Rather Not Say',
             'dob' => 'nullable|date',
+            'phone' => 'nullable|string|max:20',
+            'email' => 'required|email|unique:users,email',
+            'gender' => 'nullable|in:Male,Female,Rather Not Say',
             'address' => 'nullable|string',
             'weight' => 'nullable|numeric|min:0|max:999.99',
             'height' => 'nullable|numeric|min:0|max:999.99',
@@ -52,14 +53,10 @@ class MemberController extends Controller
         try {
             // Create user first
             $user = User::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
                 'email' => $request->email,
-                'phone' => $request->phone,
                 'gender' => $request->gender,
                 'dob' => $request->dob,
-                'address' => $request->address,
-                'hashed_password' => Hash::make($request->password),
+                'password' => Hash::make($request->password),
                 'role_id' => 3, // Assuming 3 is Member role
                 'status' => 'Active',
             ]);
@@ -67,10 +64,19 @@ class MemberController extends Controller
             // Create member
             $member = Member::create([
                 'member_id' => $user->user_id,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                
+                'phone' => $request->phone,
+                'address' => $request->address,
                 'membership_id' => $request->membership_id,
                 'weight' => $request->weight,
                 'height' => $request->height,
             ]);
+
+            // Update user role to 'member'
+            $user->role_id = Role::where('role_name', 'member')->first()->role_id;
+            $user->save();
 
             DB::commit();
             return redirect()->route('members.index')->with('success', 'Member created successfully.');
@@ -107,10 +113,10 @@ class MemberController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:100',
             'last_name' => 'required|string|max:100',
-            'email' => 'required|email|unique:users,email,' . $member->member_id . ',user_id',
-            'phone' => 'nullable|string|max:20',
-            'gender' => 'nullable|in:Male,Female,Rather Not Say',
             'dob' => 'nullable|date',
+            'phone' => 'nullable|string|max:20',
+            'email' => 'required|email|unique:users,email,' . $member->member_id . ',user_id',
+            'gender' => 'nullable|in:Male,Female,Rather Not Say',
             'address' => 'nullable|string',
             'weight' => 'nullable|numeric|min:0|max:999.99',
             'height' => 'nullable|numeric|min:0|max:999.99',
@@ -122,18 +128,18 @@ class MemberController extends Controller
         try {
             // Update user
             $member->user->update([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
                 'email' => $request->email,
-                'phone' => $request->phone,
                 'gender' => $request->gender,
                 'dob' => $request->dob,
-                'address' => $request->address,
                 'status' => $request->status,
             ]);
 
             // Update member
             $member->update([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'phone' => $request->phone,
+                'address' => $request->address,
                 'membership_id' => $request->membership_id,
                 'weight' => $request->weight,
                 'height' => $request->height,

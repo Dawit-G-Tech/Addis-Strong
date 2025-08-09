@@ -4,22 +4,39 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     protected $primaryKey = 'user_id';
     public $incrementing = true;
     protected $keyType = 'int';
 
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'phone',
-        'gender', 'dob', 'address', 'registration_date',
-        'hashed_password', 'profile_picture', 'role_id', 'status'
+        'name',
+        'email',
+        'gender',
+        'dob',
+        'registration_date',
+        'password',
+        'profile_picture',
+        'role_id',
+        'status'
     ];
 
-    protected $hidden = ['hashed_password'];
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'dob' => 'date',
+        'registration_date' => 'date',
+    ];
 
     public function role()
     {
@@ -34,5 +51,13 @@ class User extends Authenticatable
     public function staff()
     {
         return $this->hasOne(Staff::class, 'staff_id');
+    }
+
+    /**
+     * Get the user's full name.
+     */
+    public function getNameAttribute($value)
+    {
+        return $value ?: $this->email;
     }
 }

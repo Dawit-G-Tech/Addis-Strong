@@ -43,14 +43,14 @@
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                {{ $member->user->first_name }} {{ $member->user->last_name }}
+                                                {{ $member->first_name }} {{ $member->last_name }}
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900 dark:text-gray-100">{{ $member->user->email }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900 dark:text-gray-100">{{ $member->user->phone ?? 'N/A' }}</div>
+                                            <div class="text-sm text-gray-900 dark:text-gray-100">{{ $member->phone ?? 'N/A' }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900 dark:text-gray-100">

@@ -10,43 +10,44 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        User::insert([
+        $users = [
             [
-                'first_name' => 'Alice',
-                'last_name' => 'Smith',
                 'email' => 'admin@gym.com',
-                'phone' => '0911000001',
+                'name' => 'Alice Smith',
                 'gender' => 'Female',
                 'dob' => '1990-01-01',
-                'address' => 'Addis Ababa',
-                'hashed_password' => Hash::make('password'),
+                'registration_date' => now(),
+                'password' => Hash::make('password'),
                 'role_id' => 1, // Admin
                 'status' => 'Active',
             ],
             [
-                'first_name' => 'John',
-                'last_name' => 'Doe',
                 'email' => 'member1@gym.com',
-                'phone' => '0911000002',
+                'name' => 'John Doe',
                 'gender' => 'Male',
                 'dob' => '1995-04-10',
-                'address' => 'Addis Ababa',
-                'hashed_password' => Hash::make('password'),
+                'registration_date' => now(),
+                'password' => Hash::make('password'),
                 'role_id' => 2, // Member
                 'status' => 'Active',
             ],
             [
-                'first_name' => 'Sara',
-                'last_name' => 'Kebede',
                 'email' => 'trainer@gym.com',
-                'phone' => '0911000003',
+                'name' => 'Sara Kebede',
                 'gender' => 'Female',
                 'dob' => '1988-08-08',
-                'address' => 'Addis Ababa',
-                'hashed_password' => Hash::make('password'),
+                'registration_date' => now(),
+                'password' => Hash::make('password'),
                 'role_id' => 3, // Trainer
                 'status' => 'Active',
             ]
-        ]);
+        ];
+
+        foreach ($users as $userData) {
+            User::updateOrCreate(
+                ['email' => $userData['email']],
+                $userData
+            );
+        }
     }
 }

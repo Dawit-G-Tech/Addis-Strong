@@ -12,7 +12,17 @@ class Member extends Model
     protected $primaryKey = 'member_id';
     public $timestamps = false;
 
-    protected $fillable = ['member_id', 'membership_id', 'weight', 'height'];
+    protected $fillable = [
+        'member_id',
+        'first_name',
+        'last_name',
+        'phone',
+        'dob',
+        'address',
+        'membership_id',
+        'weight',
+        'height'
+    ];
 
     public function user()
     {

@@ -14,13 +14,13 @@
                         <div class="flex-shrink-0">
                             <div class="h-12 w-12 rounded-full bg-blue-500 flex items-center justify-center">
                                 <span class="text-white text-lg font-medium">
-                                    {{ substr(auth()->user()->first_name, 0, 1) }}{{ substr(auth()->user()->last_name, 0, 1) }}
+                                    {{ substr(auth()->user()->name, 0, 1) }}
                                 </span>
                             </div>
                         </div>
                         <div class="ml-4">
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                Welcome back, {{ auth()->user()->first_name }}!
+                                Welcome back, {{ auth()->user()->name }}!
                             </h3>
                             <p class="text-sm text-gray-500 dark:text-gray-400">
                                 Here's your fitness journey overview

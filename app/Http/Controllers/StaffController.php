@@ -49,20 +49,20 @@ class StaffController extends Controller
         try {
             // Create user first
             $user = User::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
                 'email' => $request->email,
-                'phone' => $request->phone,
                 'gender' => $request->gender,
                 'dob' => $request->dob,
-                'address' => $request->address,
-                'hashed_password' => Hash::make($request->password),
+                'password' => Hash::make($request->password),
                 'role_id' => 1, // Assuming 1 is Staff role
                 'status' => 'Active',
             ]);
 
             // Create staff
             $staff = Staff::create([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'phone' => $request->phone,
+                'address' => $request->address,
                 'staff_id' => $user->user_id,
                 'hire_date' => $request->hire_date,
                 'salary' => $request->salary,

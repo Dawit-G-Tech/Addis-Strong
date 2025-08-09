@@ -16,7 +16,7 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     
-                    @if(auth()->user()->role->role_name === 'Admin' || auth()->user()->role->role_name === 'Manager')
+                    @if(auth()->user()->role->role_name === 'admin' || auth()->user()->role->role_name === 'manager')
                         <x-nav-link :href="route('members.index')" :active="request()->routeIs('members.*')">
                             {{ __('Members') }}
                         </x-nav-link>
@@ -38,13 +38,13 @@
                         </x-nav-link>
                     @endif
                     
-                    @if(auth()->user()->role->role_name === 'Trainer')
+                    @if(auth()->user()->role->role_name === 'trainer')
                         <x-nav-link :href="route('classes.index')" :active="request()->routeIs('classes.*')">
                             {{ __('My Classes') }}
                         </x-nav-link>
                     @endif
                     
-                    @if(auth()->user()->role->role_name === 'Member')
+                    @if(auth()->user()->role->role_name === 'member')
                         <x-nav-link :href="#" :active="request()->routeIs('bookings.*')">
                             {{ __('My Bookings') }}
                         </x-nav-link>
@@ -61,7 +61,7 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
+                            <div>{{ Auth::user()->name }}</div>
 
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -109,7 +109,7 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
             
-            @if(auth()->user()->role->role_name === 'Admin' || auth()->user()->role->role_name === 'Manager')
+            @if(auth()->user()->role->role_name === 'admin' || auth()->user()->role->role_name === 'manager')
                 <x-responsive-nav-link :href="route('members.index')" :active="request()->routeIs('members.*')">
                     {{ __('Members') }}
                 </x-responsive-nav-link>
@@ -131,13 +131,13 @@
                 </x-responsive-nav-link>
             @endif
             
-            @if(auth()->user()->role->role_name === 'Trainer')
+            @if(auth()->user()->role->role_name === 'trainer')
                 <x-responsive-nav-link :href="route('classes.index')" :active="request()->routeIs('classes.*')">
                     {{ __('My Classes') }}
                 </x-responsive-nav-link>
             @endif
             
-            @if(auth()->user()->role->role_name === 'Member')
+            @if(auth()->user()->role->role_name === 'member')
                 <x-responsive-nav-link :href="#" :active="request()->routeIs('bookings.*')">
                     {{ __('My Bookings') }}
                 </x-responsive-nav-link>
