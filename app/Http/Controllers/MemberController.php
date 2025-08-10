@@ -161,19 +161,5 @@ class MemberController extends Controller
         }
     }
 
-    /**
-     * Get member statistics
-     */
-    public function statistics()
-    {
-        $totalMembers = Member::count();
-        $activeMembers = Member::whereHas('user', function($query) {
-            $query->where('status', 'Active');
-        })->count();
-        $newMembersThisMonth = Member::whereHas('user', function($query) {
-            $query->where('registration_date', '>=', now()->startOfMonth());
-        })->count();
 
-        return view('members.statistics', compact('totalMembers', 'activeMembers', 'newMembersThisMonth'));
-    }
 }

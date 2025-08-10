@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PowerFit Gym - Transform Your Life</title>
+    <title>Addis-strong Gym - Transform Your Life</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -31,7 +31,7 @@
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <h1 class="text-2xl font-bold text-purple-600">
-                            <i class="fas fa-dumbbell mr-2"></i>PowerFit
+                            <i class="fas fa-dumbbell mr-2"></i>Addis-strong
                         </h1>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
     <section id="about" class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-gray-900 mb-4">Why Choose PowerFit?</h2>
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Why Choose Addis-strong?</h2>
                 <p class="text-xl text-gray-600 max-w-3xl mx-auto">
                     We provide everything you need to achieve your fitness goals in a supportive and motivating environment.
                 </p>
@@ -239,7 +239,7 @@
     <div id="registerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
         <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4 max-h-screen overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">Join PowerFit</h2>
+                <h2 class="text-2xl font-bold text-gray-900">Join Addis-strong</h2>
                 <button onclick="closeRegisterModal()" class="text-gray-400 hover:text-gray-600">
                     <i class="fas fa-times text-xl"></i>
                 </button>
@@ -254,14 +254,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                     <input type="email" name="email" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
-                    <select name="role_id" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
-                        <option value="">Select your role</option>
-                        <option value="2">Member</option>
-                        <option value="3">Trainer</option>
-                    </select>
-                </div>
+
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
                     <select name="gender" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
@@ -300,7 +293,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid md:grid-cols-4 gap-8">
                 <div>
-                    <h3 class="text-2xl font-bold mb-4">PowerFit</h3>
+                    <h3 class="text-2xl font-bold mb-4">Addis-strong</h3>
                     <p class="text-gray-400">Transform your life with the ultimate fitness experience.</p>
                 </div>
                 <div>
@@ -332,7 +325,7 @@
                 </div>
             </div>
             <div class="border-t border-gray-800 mt-8 pt-8 text-center">
-                <p class="text-gray-400">&copy; 2024 PowerFit Gym. All rights reserved.</p>
+                <p class="text-gray-400">&copy; 2024 Addis-strong Gym. All rights reserved.</p>
             </div>
         </div>
     </footer>

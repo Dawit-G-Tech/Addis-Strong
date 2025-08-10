@@ -150,17 +150,5 @@ class StaffController extends Controller
         }
     }
 
-    /**
-     * Get staff statistics
-     */
-    public function statistics()
-    {
-        $totalStaff = Staff::count();
-        $activeStaff = Staff::whereHas('user', function($query) {
-            $query->where('status', 'Active');
-        })->count();
-        $totalSalary = Staff::sum('salary');
 
-        return view('staff.statistics', compact('totalStaff', 'activeStaff', 'totalSalary'));
-    }
 }

@@ -2,8 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\DashboardController;
-use App\Http\Controllers\Api\MemberController;
+
 use App\Http\Controllers\ProfileController;
 
 /*
@@ -32,17 +31,4 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar']);
 });
 
-// Dashboard API routes
-Route::middleware('auth')->prefix('dashboard')->group(function () {
-    Route::get('/stats', [DashboardController::class, 'getStats']);
-    Route::get('/recent-activity', [DashboardController::class, 'getRecentActivity']);
-});
 
-// Member API routes
-Route::middleware('auth')->prefix('members')->group(function () {
-    Route::get('/', [MemberController::class, 'index']);
-    Route::post('/', [MemberController::class, 'store']);
-    Route::get('/{member}', [MemberController::class, 'show']);
-    Route::put('/{member}', [MemberController::class, 'update']);
-    Route::delete('/{member}', [MemberController::class, 'destroy']);
-});

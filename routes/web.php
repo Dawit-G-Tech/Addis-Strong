@@ -14,6 +14,8 @@ Route::get('/', function () {
     return view('landing');
 })->name('landing');
 
+
+
 // Authentication routes
 require __DIR__.'/auth.php';
 
@@ -69,8 +71,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/payments', [PaymentController::class, 'myPayments'])->name('member.payments');
     });
 
-    // User routes (default)
-    Route::middleware(['role:user'])->prefix('user')->group(function () {
+    // User routes (default) - accessible to all authenticated users
+    Route::prefix('user')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'userDashboard'])->name('user.dashboard');
     });
 });

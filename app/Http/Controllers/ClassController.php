@@ -118,27 +118,5 @@ class ClassController extends Controller
         }
     }
 
-    /**
-     * Get class statistics
-     */
-    public function statistics()
-    {
-        $totalClasses = ClassModel::count();
-        $upcomingClasses = ClassModel::where('schedule_time', '>', now())->count();
-        $totalBookings = DB::table('class_bookings')->count();
 
-        return view('classes.statistics', compact('totalClasses', 'upcomingClasses', 'totalBookings'));
-    }
-
-    /**
-     * Get classes by trainer
-     */
-    public function byTrainer($trainerId)
-    {
-        $classes = ClassModel::where('trainer_id', $trainerId)
-            ->with(['trainer', 'bookings'])
-            ->get();
-        
-        return view('classes.by-trainer', compact('classes'));
-    }
 }

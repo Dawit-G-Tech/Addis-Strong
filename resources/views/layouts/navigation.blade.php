@@ -53,6 +53,12 @@
                             {{ __('My Payments') }}
                         </x-nav-link>
                     @endif
+                    
+                    @if(auth()->user()->role->role_name === 'user')
+                        <x-nav-link :href="route('memberships.index')" :active="request()->routeIs('memberships.*')">
+                            {{ __('Memberships') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -146,12 +152,18 @@
                     {{ __('My Payments') }}
                 </x-responsive-nav-link>
             @endif
+            
+            @if(auth()->user()->role->role_name === 'user')
+                <x-responsive-nav-link :href="route('memberships.index')" :active="request()->routeIs('memberships.*')">
+                    {{ __('Memberships') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4">
-                <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
+                <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
             </div>
 
