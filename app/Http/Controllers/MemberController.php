@@ -36,8 +36,7 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'first_name' => 'required|string|max:100',
-            'last_name' => 'required|string|max:100',
+            'name' => 'required|string|max:100',
             'dob' => 'nullable|date',
             'phone' => 'nullable|string|max:20',
             'email' => 'required|email|unique:users,email',
@@ -53,6 +52,7 @@ class MemberController extends Controller
         try {
             // Create user first
             $user = User::create([
+                'name' => $request->name,
                 'email' => $request->email,
                 'gender' => $request->gender,
                 'dob' => $request->dob,
@@ -64,9 +64,6 @@ class MemberController extends Controller
             // Create member
             $member = Member::create([
                 'member_id' => $user->user_id,
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                
                 'phone' => $request->phone,
                 'address' => $request->address,
                 'membership_id' => $request->membership_id,
@@ -111,8 +108,7 @@ class MemberController extends Controller
     public function update(Request $request, Member $member)
     {
         $request->validate([
-            'first_name' => 'required|string|max:100',
-            'last_name' => 'required|string|max:100',
+            'name' => 'required|string|max:100',
             'dob' => 'nullable|date',
             'phone' => 'nullable|string|max:20',
             'email' => 'required|email|unique:users,email,' . $member->member_id . ',user_id',
@@ -128,6 +124,7 @@ class MemberController extends Controller
         try {
             // Update user
             $member->user->update([
+                'name' => $request->name,
                 'email' => $request->email,
                 'gender' => $request->gender,
                 'dob' => $request->dob,
@@ -136,8 +133,6 @@ class MemberController extends Controller
 
             // Update member
             $member->update([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
                 'phone' => $request->phone,
                 'address' => $request->address,
                 'membership_id' => $request->membership_id,

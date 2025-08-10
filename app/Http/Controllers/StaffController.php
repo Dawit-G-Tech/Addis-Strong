@@ -33,8 +33,7 @@ class StaffController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'first_name' => 'required|string|max:100',
-            'last_name' => 'required|string|max:100',
+            'name' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email',
             'phone' => 'nullable|string|max:20',
             'gender' => 'nullable|in:Male,Female,Rather Not Say',
@@ -59,8 +58,6 @@ class StaffController extends Controller
 
             // Create staff
             $staff = Staff::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
                 'phone' => $request->phone,
                 'address' => $request->address,
                 'staff_id' => $user->user_id,

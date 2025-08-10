@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,27 +29,24 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // Redirect based on user role
         $user = Auth::user();
+        $role = $user->role->role_name ?? 'user';
 
-        // Role-based redirect
-        if ($user->role) {
-            switch ($user->role->role_name) {
-                case 'manager':
-                    return redirect()->route('manager.dashboard');
-                case 'trainer':
-                    return redirect()->route('trainer.dashboard');
-                case 'admin':
-                    return redirect()->route('admin.dashboard');
-                case 'member':
-                    return redirect()->route('member.dashboard');
-                case 'staff':
-                    return redirect()->route('staff.dashboard');
-                default:
-                    return redirect()->route('user.dashboard');
-            }
+        switch ($role) {
+            case 'admin':
+                return redirect()->intended('/admin/dashboard');
+            case 'manager':
+                return redirect()->intended('/manager/dashboard');
+            case 'trainer':
+                return redirect()->intended('/trainer/dashboard');
+            case 'staff':
+                return redirect()->intended('/staff/dashboard');
+            case 'member':
+                return redirect()->intended('/member/dashboard');
+            default:
+                return redirect()->intended('/dashboard');
         }
-
-        return redirect()->route('user.dashboard');
     }
 
     /**

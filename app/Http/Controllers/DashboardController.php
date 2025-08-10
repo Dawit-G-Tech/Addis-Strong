@@ -2,25 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Member;
-use App\Models\Staff;
-use App\Models\ClassModel;
-use App\Models\Payment;
-use App\Models\Membership;
-use App\Models\Attendance;
-use App\Models\PerformanceReport;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display the main dashboard based on user role
-     */
-    public function index()
+    public function index(): View
     {
         $user = auth()->user();
-        $role = $user->role->role_name;
+        $role = $user->role->role_name ?? 'user';
 
         switch ($role) {
             case 'admin':
@@ -29,203 +19,83 @@ class DashboardController extends Controller
                 return $this->managerDashboard();
             case 'trainer':
                 return $this->trainerDashboard();
-            case 'member':
-                return $this->memberDashboard();
             case 'staff':
                 return $this->staffDashboard();
+            case 'member':
+                return $this->memberDashboard();
             default:
                 return $this->userDashboard();
         }
     }
 
-    /**
-     * Admin Dashboard
-     */
-    private function adminDashboard()
+    public function adminDashboard(): View
     {
         $stats = [
-            'totalMembers' => Member::count(),
-            'activeMembers' => Member::whereHas('user', function($query) {
-                $query->where('status', 'Active');
-            })->count(),
-            'totalStaff' => Staff::count(),
-            'totalClasses' => ClassModel::count(),
-            'totalRevenue' => Payment::sum('amount'),
-            'thisMonthRevenue' => Payment::whereMonth('payment_date', now()->month)
-                ->whereYear('payment_date', now()->year)
-                ->sum('amount'),
+            'total_members' => \App\Models\Member::count(),
+            'total_staff' => \App\Models\Staff::count(),
+            'total_classes' => \App\Models\ClassModel::count(),
+            'total_payments' => \App\Models\Payment::sum('amount'),
         ];
-
-        $recentMembers = Member::with('user')
-            ->whereHas('user', function($query) {
-                $query->where('registration_date', '>=', now()->subDays(30));
-            })
-            ->latest()
-            ->take(5)
-            ->get();
-
-        $recentPayments = Payment::with(['member.user'])
-            ->latest('payment_date')
-            ->take(5)
-            ->get();
-
-        return view('dashboards.admin', compact('stats', 'recentMembers', 'recentPayments'));
-    }
-
-    /**
-     * Manager Dashboard
-     */
-    private function managerDashboard()
-    {
-        $stats = [
-            'totalMembers' => Member::count(),
-            'activeMembers' => Member::whereHas('user', function($query) {
-                $query->where('status', 'Active');
-            })->count(),
-            'totalClasses' => ClassModel::count(),
-            'totalRevenue' => Payment::sum('amount'),
-        ];
-
-        $upcomingClasses = ClassModel::with('trainer')
-            ->where('schedule_time', '>', now())
-            ->orderBy('schedule_time')
-            ->take(5)
-            ->get();
-
-        $membershipStats = Membership::withCount('members')->get();
-
-        return view('dashboards.manager', compact('stats', 'upcomingClasses', 'membershipStats'));
-    }
-
-    /**
-     * Trainer Dashboard
-     */
-    private function trainerDashboard()
-    {
-        $trainerId = auth()->id();
         
-        $stats = [
-            'totalClasses' => ClassModel::where('trainer_id', $trainerId)->count(),
-            'upcomingClasses' => ClassModel::where('trainer_id', $trainerId)
-                ->where('schedule_time', '>', now())
-                ->count(),
-            'totalBookings' => DB::table('class_bookings')
-                ->join('classes', 'class_bookings.class_id', '=', 'classes.class_id')
-                ->where('classes.trainer_id', $trainerId)
-                ->count(),
-        ];
-
-        $myClasses = ClassModel::where('trainer_id', $trainerId)
-            ->with(['bookings.member.user'])
-            ->where('schedule_time', '>', now())
-            ->orderBy('schedule_time')
-            ->take(5)
-            ->get();
-
-        return view('dashboards.trainer', compact('stats', 'myClasses'));
+        return view('dashboards.admin', compact('stats'));
     }
 
-    /**
-     * Member Dashboard
-     */
-    private function memberDashboard()
+    public function managerDashboard(): View
+    {
+        $stats = [
+            'total_members' => \App\Models\Member::count(),
+            'active_memberships' => \App\Models\Membership::where('status', 'active')->count(),
+            'monthly_revenue' => \App\Models\Payment::whereMonth('created_at', now()->month)->sum('amount'),
+            'upcoming_classes' => \App\Models\ClassModel::where('date', '>=', now())->count(),
+        ];
+        
+        return view('dashboards.manager', compact('stats'));
+    }
+
+    public function trainerDashboard(): View
+    {
+        $trainer = auth()->user()->staff;
+        $stats = [
+            'my_classes' => \App\Models\ClassModel::where('trainer_id', $trainer->staff_id ?? 0)->count(),
+            'upcoming_sessions' => \App\Models\TrainingSession::where('trainer_id', $trainer->staff_id ?? 0)
+                ->where('date', '>=', now())->count(),
+            'total_members_trained' => \App\Models\ClassBooking::whereHas('class', function($q) use ($trainer) {
+                $q->where('trainer_id', $trainer->staff_id ?? 0);
+            })->distinct('member_id')->count(),
+        ];
+        
+        return view('dashboards.trainer', compact('stats'));
+    }
+
+    public function staffDashboard(): View
+    {
+        $stats = [
+            'check_ins_today' => \App\Models\Attendance::whereDate('created_at', today())->count(),
+            'equipment_available' => \App\Models\Equipment::where('status', 'available')->count(),
+            'pending_notifications' => \App\Models\Notification::where('status', 'pending')->count(),
+        ];
+        
+        return view('dashboards.staff', compact('stats'));
+    }
+
+    public function memberDashboard(): View
     {
         $member = auth()->user()->member;
+        $stats = [
+            'membership_status' => $member->membership->status ?? 'inactive',
+            'classes_booked' => \App\Models\ClassBooking::where('member_id', $member->member_id ?? 0)->count(),
+            'attendance_rate' => \App\Models\Attendance::where('member_id', $member->member_id ?? 0)->count(),
+            'next_class' => \App\Models\ClassBooking::where('member_id', $member->member_id ?? 0)
+                ->whereHas('class', function($q) {
+                    $q->where('date', '>=', now());
+                })->first(),
+        ];
         
-        if (!$member) {
-            return redirect()->route('dashboard')->with('error', 'Member profile not found.');
-        }
-
-        $stats = [
-            'totalBookings' => $member->bookings()->count(),
-            'upcomingBookings' => $member->bookings()
-                ->whereHas('class', function($query) {
-                    $query->where('schedule_time', '>', now());
-                })
-                ->count(),
-            'totalPayments' => $member->payments()->count(),
-            'lastCheckIn' => $member->attendance()
-                ->latest('check_in')
-                ->first(),
-        ];
-
-        $myBookings = $member->bookings()
-            ->with(['class.trainer'])
-            ->whereHas('class', function($query) {
-                $query->where('schedule_time', '>', now());
-            })
-            ->orderBy('booking_date')
-            ->take(5)
-            ->get();
-
-        $myPayments = $member->payments()
-            ->latest('payment_date')
-            ->take(5)
-            ->get();
-
-        return view('dashboards.member', compact('stats', 'myBookings', 'myPayments'));
+        return view('dashboards.member', compact('stats'));
     }
 
-    /**
-     * Staff Dashboard
-     */
-    private function staffDashboard()
-    {
-        $stats = [
-            'totalMembers' => Member::count(),
-            'activeMembers' => Member::whereHas('user', function($query) {
-                $query->where('status', 'Active');
-            })->count(),
-            'totalClasses' => ClassModel::count(),
-            'todayCheckIns' => Attendance::whereDate('check_in', today())->count(),
-        ];
-
-        $todayClasses = ClassModel::with('trainer')
-            ->whereDate('schedule_time', today())
-            ->orderBy('schedule_time')
-            ->get();
-
-        $recentCheckIns = Attendance::with(['member.user'])
-            ->latest('check_in')
-            ->take(5)
-            ->get();
-
-        return view('dashboards.staff', compact('stats', 'todayClasses', 'recentCheckIns'));
-    }
-
-    /**
-     * User Dashboard (default)
-     */
-    private function userDashboard()
+    public function userDashboard(): View
     {
         return view('dashboards.user');
-    }
-
-    /**
-     * Get performance reports
-     */
-    public function performanceReports()
-    {
-        $reports = PerformanceReport::orderBy('report_date', 'desc')->get();
-        return view('dashboard.performance-reports', compact('reports'));
-    }
-
-    /**
-     * Get attendance statistics
-     */
-    public function attendanceStats()
-    {
-        $stats = [
-            'todayCheckIns' => Attendance::whereDate('check_in', today())->count(),
-            'thisWeekCheckIns' => Attendance::whereBetween('check_in', [
-                now()->startOfWeek(),
-                now()->endOfWeek()
-            ])->count(),
-            'thisMonthCheckIns' => Attendance::whereMonth('check_in', now()->month)
-                ->whereYear('check_in', now()->year)
-                ->count(),
-        ];
-
-        return view('dashboard.attendance-stats', compact('stats'));
     }
 }
